@@ -7,10 +7,10 @@
   <head>
     <!-- Meta -->
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
-    />
+    
+    <!-- PERBAIKAN: Menghapus user-scalable=0 agar sesuai standar accessibility -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- Icon -->
@@ -40,37 +40,46 @@
       <!-- Konten akan diisi oleh child templates -->
     </div>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap JS -->
     <script
       th:src="@{/assets/vendor/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js}"
     ></script>
 
-    <!-- SweetAlert2 -->
+    <!-- SweetAlert2 JS -->
     <script
       th:src="@{/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js}"
     ></script>
 
-    <script>
+    <!-- Logic Notifikasi Global -->
+    <script th:inline="javascript">
       document.addEventListener("DOMContentLoaded", function () {
-        /* Ambil pesan sukses dari thymeleaf */
-        const successMessage = "[[${success}]]";
-        if (successMessage && successMessage.length > 5) {
+        
+        /* 
+           PERBAIKAN: Mengambil variabel Thymeleaf dengan cara aman (Javascript Inlining).
+           Jika ${success} tidak ada, nilainya otomatis menjadi null di JavaScript.
+           Ini mencegah error syntax jika pesan mengandung tanda kutip.
+        */
+        var successMessage = /*[[${success}]]*/ null;
+        var errorMessage = /*[[${error}]]*/ null;
+
+        // Cek Pesan Sukses
+        if (successMessage) {
           Swal.fire({
             icon: "success",
-            title: "Berhasil Melakukan Tindakan",
+            title: "Berhasil!",
             text: successMessage,
-            showConfirmButton: true,
+            showConfirmButton: false, // Tidak perlu tombol OK
+            timer: 2000 // Otomatis tutup dalam 2 detik
           });
         }
 
-        /* Ambil pesan error dari thymeleaf */
-        const errorMessage = "[[${error}]]";
-        if (errorMessage && errorMessage.length > 5) {
+        // Cek Pesan Error
+        if (errorMessage) {
           Swal.fire({
             icon: "error",
-            title: "Gagal Melakukan Tindakan",
+            title: "Gagal!",
             text: errorMessage,
-            showConfirmButton: true,
+            showConfirmButton: true, // User harus klik OK untuk menutup error
           });
         }
       });

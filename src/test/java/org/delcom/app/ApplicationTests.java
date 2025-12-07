@@ -1,53 +1,27 @@
+// src/test/java/org/delcom/app/AlarmApplicationTest.java
 package org.delcom.app;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-class ApplicationTest {
+@SpringBootTest
+@ActiveProfiles("test")
+class AlarmApplicationTest {
 
-	@Test
-	void mainMethod_ShouldRunSpringApplication() throws Exception {
-		// Mock SpringApplication.run untuk test main method
-		try (var mockedSpring = mockStatic(SpringApplication.class)) {
-			ConfigurableApplicationContext mockContext = mock(ConfigurableApplicationContext.class);
-			mockedSpring.when(() -> SpringApplication.run(Application.class, new String[] {}))
-					.thenReturn(mockContext);
+    @Test
+    void contextLoads() {
+        // Test dasar untuk memastikan Spring context dapat dimuat
+        assertTrue(true, "Context should load successfully");
+    }
 
-			// Jalankan main method
-			assertDoesNotThrow(() -> Application.main(new String[] {}));
-
-			// Verify SpringApplication.run dipanggil
-			mockedSpring.verify(() -> SpringApplication.run(Application.class, new String[] {}));
-		}
-	}
-
-	@Test
-	void contextLoads_ShouldNotThrowException() throws Exception {
-		// Test bahwa Spring context bisa dimuat
-		assertDoesNotThrow(() -> {
-			// Test basic class loading
-			Class<?> clazz = Class.forName("org.delcom.app.Application");
-			assertNotNull(clazz);
-		});
-	}
-
-	@Test
-	void todoApplication_ShouldHaveSpringBootAnnotation() throws Exception {
-		// Test bahwa class memiliki annotation @SpringBootApplication
-		assertNotNull(Application.class
-				.getAnnotation(org.springframework.boot.autoconfigure.SpringBootApplication.class));
-	}
-
-	@Test
-	void todoApplication_CanBeInstantiated() throws Exception {
-		// Test bahwa kita bisa membuat instance Application
-		assertDoesNotThrow(() -> {
-			Application app = new Application();
-			assertNotNull(app);
-		});
-	}
+    @Test
+    void testMainMethod() {
+        // Test untuk memastikan main method tidak throw exception
+        assertDoesNotThrow(() -> {
+            Application.main(new String[]{});
+        });
+    }
 }

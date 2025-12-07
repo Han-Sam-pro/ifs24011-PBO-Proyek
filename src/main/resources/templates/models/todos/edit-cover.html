@@ -10,19 +10,23 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Ubah Cover Todo</h5>
+            <!-- PERBAIKAN 1: Tambahkan aria-label pada tombol Close -->
             <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
+              aria-label="Close"
             ></button>
           </div>
 
           <div class="modal-body">
-            <!-- Hidden ID Todo -->
-            <input type="hidden" th:field="*{id}" />
+            <!-- PERBAIKAN 2: Tambahkan title="Todo ID" untuk memuaskan linter pada hidden input -->
+            <input type="hidden" th:field="*{id}" title="Todo ID" />
 
             <div class="mb-3">
-              <label class="form-label">Pilih Cover</label>
+              <!-- PERBAIKAN 3: Tambahkan for="..." agar label terhubung dengan input file -->
+              <label class="form-label" for="editCoverTodoFile">Pilih Cover</label>
+              
               <input
                 type="file"
                 class="form-control"

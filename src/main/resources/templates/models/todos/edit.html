@@ -5,16 +5,19 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Ubah Todo</h5>
+            <!-- PERBAIKAN: Tambahkan aria-label="Close" -->
             <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
+              aria-label="Close"
             ></button>
           </div>
 
           <div class="modal-body">
             <!-- Hidden: ID Todo -->
-            <input id="editTodoId" type="hidden" th:field="*{id}" />
+            <!-- PERBAIKAN: Tambahkan title agar tidak dianggap eror label -->
+            <input id="editTodoId" type="hidden" th:field="*{id}" title="ID Todo" />
 
             <!-- Judul -->
             <div class="mb-3">
