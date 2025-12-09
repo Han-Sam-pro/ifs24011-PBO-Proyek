@@ -29,6 +29,12 @@ public class Alarm {
     
     @Column(name = "volume")
     private int volume = 70;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "is_logo")
+    private boolean isLogo;
     
     // Constructors
     public Alarm() {}
@@ -88,6 +94,22 @@ public class Alarm {
     
     public void setVolume(int volume) {
         this.volume = volume;
+    }
+
+    public String getImageUrl() {
+        return imageUrl; // Variabel ini harus ada di poin nomor 1
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean getIsLogo() { 
+        return isLogo; // Variabel ini harus ada di poin nomor 1
+    }
+
+    public void setIsLogo(boolean logo) {
+        this.isLogo = logo;
     }
     
     @Override

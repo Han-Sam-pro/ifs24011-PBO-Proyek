@@ -48,6 +48,53 @@ public class AlarmController {
         return "redirect:/";
     }
     
+    // TAMBAHKAN: Endpoint untuk update alarm (waktu dan label)
+    @PostMapping("/update")
+    public String updateAlarm(@Valid @ModelAttribute AlarmDto alarmDto, 
+                             BindingResult result, 
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
+        
+        if (result.hasErrors()) {
+            model.addAttribute("alarms", alarmService.getAllAlarms());
+            model.addAttribute("audioFiles", audioService.getAvailableSounds());
+            model.addAttribute("currentTime", LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
+            return "index";
+        }
+        
+        try {
+            // Validasi ID
+            if (alarmDto.getId() == null) {
+                redirectAttributes.addFlashAttribute("errorMessage", "ID alarm tidak valid!");
+                return "redirect:/";
+            }
+            
+            // Update alarm menggunakan service
+            alarmService.updateAlarm(alarmDto);
+            redirectAttributes.addFlashAttribute("successMessage", "Alarm berhasil diperbarui!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Gagal memperbarui alarm: " + e.getMessage());
+        }
+        
+        return "redirect:/";
+    }
+    
+    // TAMBAHKAN: Endpoint untuk update label saja
+    @PostMapping("/update-label")
+    public String updateLabel(@RequestParam("id") Long id,
+                             @RequestParam("label") String label,
+                             RedirectAttributes redirectAttributes) {
+        
+        try {
+            alarmService.updateAlarmLabel(id, label);
+            redirectAttributes.addFlashAttribute("successMessage", "Label alarm berhasil diperbarui!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Gagal memperbarui label: " + e.getMessage());
+        }
+        
+        return "redirect:/";
+    }
+    
     @PostMapping("/delete/{id}")
     public String deleteAlarm(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         alarmService.deleteAlarm(id);

@@ -10,970 +10,585 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
     <style>
+        /* --- 1. GLOBAL & LAYOUT --- */
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding-top: 20px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .container {
-            max-width: 1200px;
-        }
-        
-        .clock-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .digital-clock {
-            font-family: 'Courier New', monospace;
-            font-size: 4.5rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .current-date {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .card {
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            border-radius: 15px 15px 0 0 !important;
-            padding: 15px 20px;
-            font-weight: 600;
-        }
-        
-        .alarm-form {
-            background: white;
-            padding: 25px;
-        }
-        
-        .alarm-list {
-            background: white;
-            padding: 20px;
-        }
-        
-        .alarm-item {
-            border-left: 5px solid #28a745;
-            margin-bottom: 10px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .alarm-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .alarm-item.inactive {
-            border-left-color: #6c757d;
-            opacity: 0.7;
-        }
-        
-        .alarm-time {
-            font-size: 1.8rem;
-            font-weight: bold;
             color: #333;
-            font-family: 'Courier New', monospace;
         }
+        .container { max-width: 1200px; }
+        footer { margin-top: 40px; color: rgba(255, 255, 255, 0.7); text-align: center; font-size: 0.9rem; padding-bottom: 20px; }
         
-        .alarm-label {
-            font-size: 1.1rem;
-            color: #555;
+        /* --- 2. COMPONENTS --- */
+        .card {
+            border-radius: 15px; border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            margin-bottom: 20px; overflow: hidden;
         }
-        
+        .card-header { font-weight: 600; padding: 15px 20px; }
         .btn-custom {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            border: none; color: white; padding: 10px 20px;
+            border-radius: 8px; font-weight: 500; transition: all 0.3s ease;
         }
-        
-        .btn-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            color: white;
+        .btn-custom:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); color: white; }
+
+        /* --- 3. DIGITAL CLOCK --- */
+        .clock-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
         }
-        
-        .modal-alarm {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            color: white;
-            border-radius: 15px;
-            border: none;
-            animation: pulse 1.5s infinite;
+        .digital-clock {
+            font-family: 'Courier New', monospace; font-size: 4.5rem;
+            font-weight: bold; color: #fff;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4); margin: 20px 0;
         }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 107, 107, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        .current-date { font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); }
+
+        /* --- 4. ALARM LIST ITEM --- */
+        .alarm-item {
+            border-left: 5px solid #28a745; margin-bottom: 15px; padding: 20px;
+            background: #f8f9fa; border-radius: 10px; transition: all 0.3s ease;
         }
+        .alarm-item:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .alarm-item.inactive { border-left-color: #6c757d; opacity: 0.7; }
         
-        .modal-alarm .modal-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        .alarm-time { font-size: 2rem; font-weight: bold; color: #333; font-family: 'Courier New', monospace; }
+        .alarm-label { font-size: 1.1rem; color: #555; word-wrap: break-word; font-weight: 500; }
+        
+        /* STYLE KHUSUS GAMBAR & LOGO */
+        .alarm-logo {
+            width: 45px; height: 45px; object-fit: cover;
+            border-radius: 50%; border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); margin-right: 15px;
         }
-        
-        .modal-alarm .modal-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        .alarm-image-large {
+            margin-top: 12px; max-width: 100%; height: auto;
+            max-height: 220px; border-radius: 8px;
+            object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block; /* Memastikan muncul di baris baru */
         }
-        
-        .status-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .status-inactive {
-            background-color: #f8f9fa;
-            color: #6c757d;
-        }
-        
-        .btn-action {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 5px;
-        }
-        
-        footer {
-            margin-top: 30px;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        }
-        
-        .alert {
-            border-radius: 10px;
-            border: none;
-        }
-        
-        /* Audio Player Styles */
+
+        /* Status Badges & Buttons */
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .status-active { background-color: #d4edda; color: #155724; }
+        .status-inactive { background-color: #e9ecef; color: #6c757d; }
+        .btn-action { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 5px; }
+
+        /* --- 5. AUDIO PLAYER --- */
         .audio-player-section {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
+            border-radius: 15px; padding: 20px; margin-top: 20px;
         }
-        
-        .audio-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
+        .audio-controls { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .audio-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+            width: 45px; height: 45px; border-radius: 50%; border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; transition: transform 0.2s; color: white;
         }
+        .audio-btn:hover { transform: scale(1.1); }
+        .btn-play { background: #28a745; }
+        .btn-pause { background: #ffc107; color: #333; }
+        .btn-stop { background: #dc3545; }
+        .btn-test { background: #17a2b8; }
+
+        /* --- 6. MODALS --- */
+        .modal-alarm {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white; border: none; animation: pulse 1.5s infinite;
+        }
+        .notification { position: fixed; top: 20px; right: 20px; z-index: 9999; animation: slideIn 0.3s ease; }
         
-        .audio-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
-        .audio-btn-play {
-            background: #28a745;
-            color: white;
-        }
-        
-        .audio-btn-pause {
-            background: #ffc107;
-            color: #212529;
-        }
-        
-        .audio-btn-stop {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .audio-btn-test {
-            background: #17a2b8;
-            color: white;
-        }
-        
-        .progress {
-            height: 10px;
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.1);
-        }
-        
-        .progress-bar {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border-radius: 5px;
-            transition: width 0.1s linear;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            min-width: 300px;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes ring {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(15deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(-15deg); }
-            100% { transform: rotate(0deg); }
-        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,107,107,0.7); } 70% { box-shadow: 0 0 0 20px rgba(0,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes ring { 0%, 50%, 100% { transform: rotate(0deg); } 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- HEADER -->
         <div class="text-center mb-4">
-            <h1 class="text-white mb-3">
-                <i class="bi bi-alarm"></i> Web Alarm Clock
-            </h1>
+            <h1 class="text-white mb-2"><i class="bi bi-alarm-fill" aria-hidden="true"></i> Web Alarm Clock</h1>
             <p class="text-white-50">Aplikasi alarm berbasis web dengan Spring Boot</p>
         </div>
         
-        <!-- Digital Clock -->
+        <!-- CLOCK DISPLAY -->
         <div class="clock-container">
-            <div class="digital-clock" id="digitalClock">00:00:00</div>
-            <div class="current-date" id="currentDate">Loading...</div>
+            <div class="digital-clock" id="digitalClock" th:text="${currentTime}">00:00:00</div>
+            <div class="current-date" id="currentDate">Memuat tanggal...</div>
         </div>
         
-        <!-- Main Content -->
+        <!-- MAIN CONTENT ROW -->
         <div class="row">
-            <!-- Alarm Form -->
+            
+            <!-- LEFT COLUMN: FORM & AUDIO -->
             <div class="col-lg-4">
+                
+                <!-- CARD: CREATE ALARM -->
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="bi bi-plus-circle me-2"></i>Set Alarm Baru
-                        </h5>
+                        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>Set Alarm Baru
                     </div>
-                    <div class="alarm-form">
-                        <form th:action="@{/save}" th:object="${alarmDto}" method="post" id="alarmForm">
+                    <div class="card-body p-4">
+                        <!-- EDIT: Menambahkan enctype untuk upload file -->
+                        <form th:action="@{/save}" th:object="${alarmDto}" method="post" enctype="multipart/form-data">
+                            
+                            <!-- Input Time -->
                             <div class="mb-3">
-                                <label for="alarmTime" class="form-label">Waktu Alarm</label>
-                                <input type="time" 
-                                       class="form-control" 
-                                       id="alarmTime" 
-                                       th:field="*{alarmTime}"
-                                       required
+                                <label for="inputAlarmTime" class="form-label fw-bold">Waktu Alarm</label>
+                                <input type="time" id="inputAlarmTime" class="form-control" th:field="*{alarmTime}" required
                                        th:classappend="${#fields.hasErrors('alarmTime')} ? 'is-invalid' : ''">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alarmTime')}" 
-                                     th:errors="*{alarmTime}"></div>
+                                <div class="invalid-feedback" th:errors="*{alarmTime}"></div>
                             </div>
                             
+                            <!-- Input Label -->
                             <div class="mb-3">
-                                <label for="label" class="form-label">Label Alarm</label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="label" 
-                                       th:field="*{label}"
-                                       placeholder="Contoh: Bangun Pagi, Meeting, dll."
-                                       required
-                                       th:classappend="${#fields.hasErrors('label')} ? 'is-invalid' : ''">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('label')}" 
-                                     th:errors="*{label}"></div>
+                                <label for="inputLabel" class="form-label fw-bold">Label</label>
+                                <input type="text" id="inputLabel" class="form-control" th:field="*{label}" placeholder="Contoh: Rapat, Makan Siang" required>
+                            </div>
+
+                            <!-- EDIT: Input File Gambar -->
+                            <div class="mb-3">
+                                <label for="inputImage" class="form-label fw-bold">Gambar / Logo (Opsional)</label>
+                                <input type="file" id="inputImage" class="form-control" name="imageFile" accept="image/*">
+                                <div class="form-text">Format didukung: JPG, PNG.</div>
+                            </div>
+
+                            <!-- Options -->
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="isLogo" th:field="*{isLogo}">
+                                <label class="form-check-label" for="isLogo">Tampilkan sebagai Logo kecil</label>
                             </div>
                             
                             <div class="mb-3 form-check">
-                                <input type="checkbox" 
-                                       class="form-check-input" 
-                                       id="active" 
-                                       th:field="*{active}"
-                                       checked>
+                                <input type="checkbox" class="form-check-input" id="active" th:field="*{active}" checked>
                                 <label class="form-check-label" for="active">Aktifkan Alarm</label>
                             </div>
                             
-                            <button type="submit" class="btn btn-custom w-100">
-                                <i class="bi bi-save me-2"></i>Simpan Alarm
+                            <button type="submit" class="btn btn-custom w-100 mt-2">
+                                <i class="bi bi-save me-2" aria-hidden="true"></i>Simpan Alarm
                             </button>
                         </form>
-                        
-                        <!-- Flash Messages -->
-                        <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert">
-                            <i class="bi bi-check-circle me-2"></i>
-                            <span th:text="${successMessage}"></span>
+
+                        <!-- Alerts -->
+                        <div th:if="${successMessage}" class="alert alert-success mt-3 py-2">
+                            <i class="bi bi-check-circle me-2" aria-hidden="true"></i> <span th:text="${successMessage}"></span>
                         </div>
-                        <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
-                            <i class="bi bi-exclamation-circle me-2"></i>
-                            <span th:text="${errorMessage}"></span>
+                        <div th:if="${errorMessage}" class="alert alert-danger mt-3 py-2">
+                            <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i> <span th:text="${errorMessage}"></span>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Audio Player Section -->
+                <!-- CARD: AUDIO PLAYER -->
                 <div class="audio-player-section">
-                    <h5 class="mb-3">
-                        <i class="bi bi-music-note-beamed me-2"></i>Pemutar Audio
-                    </h5>
+                    <h6 class="fw-bold mb-3"><i class="bi bi-music-note-beamed me-2" aria-hidden="true"></i>Pengaturan Suara</h6>
                     
                     <div class="mb-3">
-                        <!-- PERBAIKAN: Menambahkan for dan aria-label -->
-                        <label class="form-label" for="audioSelect">Pilih Suara Alarm:</label>
                         <select class="form-select" id="audioSelect" aria-label="Pilih Suara Alarm">
-                            <option value="/Sound/Yo-Phone-Long.mp3" selected>Yo Phone Long</option>
-                            <option value="/Sound/alarm.mp3">Alarm Standar</option>
-                            <option value="/Sound/beep.mp3">Beep</option>
-                            <option value="/Sound/bell.mp3">Bell</option>
+                            <option th:each="audio : ${audioFiles}" th:value="'/Sound/' + ${audio}" th:text="${audio}">Sound</option>
+                            <option th:if="${#lists.isEmpty(audioFiles)}" value="/Sound/Yo-Phone-Long.mp3">Default Sound</option>
                         </select>
                     </div>
                     
-                    <div class="mb-3">
-                        <!-- PERBAIKAN: Menambahkan for dan aria-label -->
-                        <label class="form-label" for="volumeSlider">Volume: <span id="volumeValue">70</span>%</label>
-                        <input type="range" class="form-range" id="volumeSlider" min="0" max="100" value="70" aria-label="Pengaturan Volume">
+                    <div class="mb-2">
+                        <label for="volumeSlider" class="form-label small">Volume: <span id="volumeValue">70</span>%</label>
+                        <input type="range" class="form-range" id="volumeSlider" min="0" max="100" value="70">
                     </div>
                     
-                    <!-- PERBAIKAN: Menambahkan aria-label dan title pada setiap tombol -->
-                    <div class="audio-controls">
-                        <button type="button" class="audio-btn audio-btn-play" onclick="playSelectedAudio()" aria-label="Putar Audio" title="Putar Audio">
-                            <i class="bi bi-play-fill" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="audio-btn audio-btn-pause" onclick="pauseAudio()" aria-label="Jeda Audio" title="Jeda Audio">
-                            <i class="bi bi-pause-fill" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="audio-btn audio-btn-stop" onclick="stopAudio()" aria-label="Hentikan Audio" title="Hentikan Audio">
-                            <i class="bi bi-stop-fill" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="audio-btn audio-btn-test" onclick="testAlarmSound()" aria-label="Test Suara Alarm" title="Test Suara Alarm">
-                            <i class="bi bi-bell-fill" aria-hidden="true"></i>
-                        </button>
+                    <div class="audio-controls justify-content-center">
+                        <button class="audio-btn btn-play" onclick="AudioController.play()" title="Putar" aria-label="Putar Audio"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+                        <button class="audio-btn btn-pause" onclick="AudioController.pause()" title="Jeda" aria-label="Jeda Audio"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
+                        <button class="audio-btn btn-stop" onclick="AudioController.stop()" title="Stop" aria-label="Hentikan Audio"><i class="bi bi-stop-fill" aria-hidden="true"></i></button>
+                        <button class="audio-btn btn-test" onclick="AudioController.test()" title="Test" aria-label="Tes Suara"><i class="bi bi-bell-fill" aria-hidden="true"></i></button>
                     </div>
                     
-                    <!-- Audio Progress -->
-                    <div class="mt-3">
-                        <div class="progress">
-                            <div id="audioProgress" class="progress-bar" role="progressbar" style="width: 0%"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-1">
-                            <small id="currentTime">0:00</small>
-                            <small id="duration">0:00</small>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-2 text-center">
-                        <small class="text-muted" id="currentAudio">Tidak ada audio yang diputar</small>
-                        <br>
-                        <small class="text-muted" id="audioStatus">Status: Stopped</small>
-                    </div>
-                </div>
-                
-                <!-- Instructions -->
-                <div class="card mt-4">
-                    <div class="card-header bg-info text-white">
-                        <h6 class="mb-0">
-                            <i class="bi bi-info-circle me-2"></i>Petunjuk
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">
-                                <i class="bi bi-check-circle text-success me-2"></i>
-                                Klik di halaman untuk mengaktifkan suara
-                            </li>
-                            <li class="mb-2">
-                                <i class="bi bi-check-circle text-success me-2"></i>
-                                Alarm hanya aktif jika browser terbuka
-                            </li>
-                            <li>
-                                <i class="bi bi-check-circle text-success me-2"></i>
-                                Gunakan format 24 jam (00:00 - 23:59)
-                            </li>
-                        </ul>
+                    <div class="text-center mt-3">
+                        <small class="text-muted d-block" id="currentAudio">Siap memutar</small>
+                        <small class="fw-bold" id="audioStatus">Status: Stopped</small>
                     </div>
                 </div>
             </div>
             
-            <!-- Alarm List -->
+            <!-- RIGHT COLUMN: ALARM LIST -->
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
-                            <i class="bi bi-list-ul me-2"></i>Daftar Alarm
-                            <span class="badge bg-light text-dark ms-2" th:text="${alarms.size()}"></span>
-                        </h5>
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-list-ul me-2" aria-hidden="true"></i>Daftar Alarm</span>
+                        <span class="badge bg-white text-success" th:text="${alarms != null ? alarms.size() : 0}">0</span>
                     </div>
-                    <div class="alarm-list">
-                        <div th:if="${#lists.isEmpty(alarms)}" class="text-center py-5">
-                            <i class="bi bi-alarm text-muted" style="font-size: 4rem;"></i>
-                            <h5 class="text-muted mt-3">Belum ada alarm</h5>
-                            <p class="text-muted">Tambahkan alarm baru menggunakan form di samping</p>
+                    <div class="card-body bg-light">
+                        
+                        <!-- Empty State -->
+                        <div th:if="${#lists.isEmpty(alarms)}" class="text-center py-5 text-muted">
+                            <i class="bi bi-alarm" style="font-size: 3rem;" aria-hidden="true"></i>
+                            <p class="mt-2">Belum ada alarm yang diatur.</p>
                         </div>
                         
-                        <div class="row" th:unless="${#lists.isEmpty(alarms)}">
-                            <div class="col-12" th:each="alarm : ${alarms}">
-                                <div class="alarm-item" th:classappend="${not alarm.active} ? 'inactive' : ''">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-3">
-                                            <div class="alarm-time" 
-                                                 th:text="${#temporals.format(alarm.alarmTime, 'HH:mm')}">
+                        <!-- List Items -->
+                        <div th:each="alarm : ${alarms}">
+                            <div class="alarm-item" 
+                                 th:classappend="${not alarm.active} ? 'inactive' : ''"
+                                 th:data-id="${alarm.id}"
+                                 th:data-image="${alarm.imageUrl}"
+                                 th:data-logo="${alarm.isLogo}">
+                                 
+                                <div class="row align-items-center">
+                                    <!-- Time Column -->
+                                    <div class="col-md-3 text-center text-md-start">
+                                        <div class="alarm-time" th:text="${#temporals.format(alarm.alarmTime, 'HH:mm')}">00:00</div>
+                                    </div>
+                                    
+                                    <!-- Content Column (Label & Image) -->
+                                    <div class="col-md-5">
+                                        <div class="d-flex flex-column">
+                                            
+                                            <!-- LOGO MODE: Disamping Label -->
+                                            <div class="d-flex align-items-center mb-1">
+                                                <img th:if="${alarm.isLogo and alarm.imageUrl != null}" 
+                                                     th:src="${alarm.imageUrl}" class="alarm-logo" alt="Logo Alarm">
+                                                <span class="alarm-label" th:text="${alarm.label}">Label</span>
                                             </div>
+                                            
+                                            <!-- IMAGE MODE: Dibawah Label -->
+                                            <div th:if="${!alarm.isLogo and alarm.imageUrl != null}">
+                                                <img th:src="${alarm.imageUrl}" class="alarm-image-large" alt="Gambar Kegiatan">
+                                            </div>
+                                            
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="alarm-label" th:text="${alarm.label}"></div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <span th:if="${alarm.active}" 
-                                                  class="status-badge status-active">
-                                                <i class="bi bi-check-circle me-1"></i>Aktif
-                                            </span>
-                                            <span th:unless="${alarm.active}" 
-                                                  class="status-badge status-inactive">
-                                                <i class="bi bi-x-circle me-1"></i>Nonaktif
-                                            </span>
-                                        </div>
-                                        <div class="col-md-2 text-end">
-                                            <div class="d-flex justify-content-end">
-                                                <form th:action="@{/toggle/{id}(id=${alarm.id})}" 
-                                                      method="post" 
-                                                      class="me-2">
-                                                    <button type="submit" 
-                                                            class="btn btn-action btn-outline-primary"
-                                                            title="Ubah Status"
-                                                            aria-label="Ubah Status Alarm"
-                                                            th:title="${alarm.active} ? 'Nonaktifkan' : 'Aktifkan'"
-                                                            th:aria-label="${alarm.active} ? 'Nonaktifkan alarm ' + ${alarm.label} : 'Aktifkan alarm ' + ${alarm.label}">
-                                                        <i class="bi" 
-                                                           th:class="${alarm.active} ? 'bi-power' : 'bi-play-circle'"></i>
-                                                        <span class="visually-hidden">
-                                                            <span th:text="${alarm.active} ? 'Nonaktifkan' : 'Aktifkan'"></span>
-                                                            <span th:text="' alarm ' + ${alarm.label}"></span>
-                                                        </span>
+                                    </div>
+                                    
+                                    <!-- Status & Actions Column -->
+                                    <div class="col-md-4">
+                                        <div class="d-flex justify-content-between align-items-center mt-3 mt-md-0">
+                                            
+                                            <!-- Status Badge -->
+                                            <span th:if="${alarm.active}" class="status-badge status-active"><i class="bi bi-check-circle me-1" aria-hidden="true"></i>Aktif</span>
+                                            <span th:unless="${alarm.active}" class="status-badge status-inactive"><i class="bi bi-dash-circle me-1" aria-hidden="true"></i>Mati</span>
+                                            
+                                            <!-- Action Buttons -->
+                                            <div class="d-flex">
+                                                <button type="button" class="btn btn-outline-warning btn-action" 
+                                                        th:onclick="'UIController.openEdit(' + ${alarm.id} + ')'" 
+                                                        title="Edit" aria-label="Edit Alarm">
+                                                    <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+                                                </button>
+                                                
+                                                <form th:action="@{/toggle/{id}(id=${alarm.id})}" method="post" style="display:inline;">
+                                                    <button type="submit" class="btn btn-outline-primary btn-action" 
+                                                            th:title="${alarm.active} ? 'Matikan' : 'Hidupkan'"
+                                                            th:aria-label="${alarm.active} ? 'Nonaktifkan Alarm' : 'Aktifkan Alarm'">
+                                                        <i class="bi" th:class="${alarm.active} ? 'bi-power' : 'bi-play-fill'" aria-hidden="true"></i>
                                                     </button>
                                                 </form>
                                                 
-                                                <form th:action="@{/delete/{id}(id=${alarm.id})}" 
-                                                      method="post"
-                                                      onsubmit="return confirm('Hapus alarm ini?');">
-                                                    <button type="submit" 
-                                                            class="btn btn-action btn-outline-danger"
-                                                            title="Hapus"
-                                                            aria-label="Hapus Alarm"
-                                                            th:aria-label="'Hapus alarm ' + ${alarm.label}">
-                                                        <i class="bi bi-trash"></i>
-                                                        <span class="visually-hidden">
-                                                            Hapus <span th:text="'alarm ' + ${alarm.label}"></span>
-                                                        </span>
+                                                <form th:action="@{/delete/{id}(id=${alarm.id})}" method="post" onsubmit="return confirm('Hapus alarm?');" style="display:inline;">
+                                                    <button type="submit" class="btn btn-outline-danger btn-action" 
+                                                            title="Hapus" aria-label="Hapus Alarm">
+                                                        <i class="bi bi-trash-fill" aria-hidden="true"></i>
                                                     </button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
+                                </div> <!-- End Row -->
+                            </div> <!-- End Alarm Item -->
+                        </div> <!-- End Loop -->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>Web Alarm Clock &copy; 2025 | Built with Spring Boot</footer>
+    </div>
+    
+    <!-- === MODAL: ALARM RINGING === -->
+    <div class="modal fade" id="alarmModal" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-alarm">
+                <div class="modal-body text-center py-5">
+                    <i class="bi bi-alarm-fill mb-3 d-block" style="font-size: 5rem; animation: ring 0.5s infinite;" aria-hidden="true"></i>
+                    <h1 class="display-3 fw-bold" id="ringTime">00:00</h1>
+                    <h3 class="fw-light mb-4" id="ringLabel">Alarm!</h3>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="btn btn-light btn-lg px-4" onclick="AlarmController.stop()">
+                            <i class="bi bi-stop-circle-fill me-2" aria-hidden="true"></i>Matikan
+                        </button>
+                        <button class="btn btn-outline-light btn-lg px-4" onclick="AlarmController.snooze()">
+                            <i class="bi bi-clock-history me-2" aria-hidden="true"></i>Snooze (5m)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- === MODAL: EDIT ALARM === -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square me-2" aria-hidden="true"></i>Edit Alarm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <!-- EDIT: Enctype Multipart untuk upload file -->
+                <form th:action="@{/update}" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="editId" name="id">
+                        
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="editTime" class="form-label">Waktu</label>
+                                <input type="time" class="form-control" id="editTime" name="alarmTime" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="editLabel" class="form-label">Label</label>
+                                <input type="text" class="form-control" id="editLabel" name="label" required>
+                            </div>
+                            
+                            <!-- Image Preview Area -->
+                            <div class="col-12 text-center" id="editPreviewContainer" style="display:none;">
+                                <div class="p-2 border rounded bg-light">
+                                    <small class="d-block text-muted mb-1">Gambar Saat Ini:</small>
+                                    <img id="editImagePreview" src="" alt="Preview Gambar" style="height: 100px; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                            
+                            <!-- EDIT: Input File Gambar -->
+                            <div class="col-12">
+                                <label for="editImageFile" class="form-label">Ganti Gambar (Opsional)</label>
+                                <input type="file" class="form-control" id="editImageFile" name="imageFile" accept="image/*">
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="editIsLogo" name="isLogo" value="true">
+                                    <label class="form-check-label" for="editIsLogo">Tampilkan sebagai Logo kecil</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="editActive" name="active" value="true">
+                                    <label class="form-check-label" for="editActive">Aktifkan Alarm</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <footer>
-            <p class="mb-0">
-                Web Alarm Clock &copy; 2024 | 
-                Dibuat dengan Spring Boot 4.0.0-RC2 dan Bootstrap 5
-            </p>
-        </footer>
-    </div>
-    
-    <!-- Alarm Modal -->
-    <div class="modal fade" id="alarmModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-alarm">
-                <div class="modal-header">
-                    <h4 class="modal-title">
-                        <i class="bi bi-bell-fill me-2"></i>WAKTU ALARM!
-                    </h4>
-                </div>
-                <div class="modal-body text-center py-4">
-                    <div class="mb-3">
-                        <i class="bi bi-alarm" style="font-size: 5rem; animation: ring 1s infinite;" aria-hidden="true"></i>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning">Update</button>
                     </div>
-                    <h2 id="alarmTimeDisplay" class="mb-2">00:00</h2>
-                    <h5 id="alarmLabelDisplay" class="mb-4">Alarm</h5>
-                    <p class="mb-0">Waktu alarm telah tiba!</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-light btn-lg" onclick="stopAlarm()" aria-label="Matikan alarm">
-                        <i class="bi bi-stop-circle me-2"></i>Matikan Alarm
-                    </button>
-                    <button type="button" class="btn btn-outline-light btn-lg" onclick="snoozeAlarm()" aria-label="Tunda alarm 5 menit">
-                        <i class="bi bi-clock me-2"></i>Tunda 5 Menit
-                    </button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
     
-    <!-- Hidden Audio Elements -->
-    <audio id="alarmAudio" preload="auto" loop>
-        <source src="/Sound/Yo-Phone-Long.mp3" type="audio/mpeg">
-        Browser Anda tidak mendukung elemen audio.
-    </audio>
+    <!-- AUDIO ELEMENTS (HIDDEN) -->
+    <audio id="mainAudio" loop></audio>
+    <audio id="previewAudio"></audio>
     
-    <audio id="previewAudio" preload="auto"></audio>
-    
-    <!-- Bootstrap JS -->
+    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- JavaScript -->
     <script>
-        // Variables
-        let lastTriggeredTime = null;
-        let userInteracted = false;
-        let currentAlarmSound = '/Sound/Yo-Phone-Long.mp3';
-        let snoozeTime = null;
-        
-        // Audio elements
-        const alarmAudio = document.getElementById('alarmAudio');
-        const previewAudio = document.getElementById('previewAudio');
-        const audioSelect = document.getElementById('audioSelect');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-        const audioStatus = document.getElementById('audioStatus');
-        const currentAudio = document.getElementById('currentAudio');
-        const audioProgress = document.getElementById('audioProgress');
-        const currentTimeDisplay = document.getElementById('currentTime');
-        const durationDisplay = document.getElementById('duration');
-        
-        // Update digital clock
-        function updateClock() {
-            const now = new Date();
-            
-            // Format time
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            // Format date
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            
-            const dayName = days[now.getDay()];
-            const date = now.getDate();
-            const monthName = months[now.getMonth()];
-            const year = now.getFullYear();
-            
-            // Update display
-            document.getElementById('digitalClock').textContent = `${hours}:${minutes}:${seconds}`;
-            document.getElementById('currentDate').textContent = 
-                `${dayName}, ${date} ${monthName} ${year}`;
-            
-            // Check alarms every second
-            checkAlarms(`${hours}:${minutes}`);
-            
-            // Check snooze
-            checkSnooze();
-            
-            // Request animation frame for smooth updates
-            requestAnimationFrame(updateClock);
-        }
-        
-        // Check for active alarms
-        function checkAlarms(currentTime) {
-            try {
-                // Get all alarms from the page (Thymeleaf rendered)
-                const alarmElements = document.querySelectorAll('.alarm-item:not(.inactive) .alarm-time');
+        /**
+         * Global State & Utilities
+         */
+        const AppState = {
+            userInteracted: false,
+            lastTriggered: null,
+            snoozeTime: null,
+            elements: {
+                audioMain: document.getElementById('mainAudio'),
+                audioPreview: document.getElementById('previewAudio'),
+                audioSelect: document.getElementById('audioSelect'),
+                volumeSlider: document.getElementById('volumeSlider')
+            }
+        };
+
+        const Utils = {
+            showNotification: (msg) => {
+                const div = document.createElement('div');
+                div.className = 'alert alert-info notification';
+                div.innerHTML = `<i class="bi bi-info-circle-fill me-2"></i>${msg}`;
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), 4000);
+            },
+            unlockAudio: () => {
+                if (!AppState.userInteracted) {
+                    AppState.userInteracted = true;
+                    // Silent play to unlock browser autoplay policy
+                    new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==").play().catch(()=>{});
+                }
+            }
+        };
+
+        /**
+         * Audio Controller
+         */
+        const AudioController = {
+            init: () => {
+                AppState.elements.volumeSlider.addEventListener('input', (e) => {
+                    const vol = e.target.value / 100;
+                    AppState.elements.audioMain.volume = vol;
+                    AppState.elements.audioPreview.volume = vol;
+                    document.getElementById('volumeValue').textContent = e.target.value;
+                });
+            },
+            play: () => {
+                Utils.unlockAudio();
+                const src = AppState.elements.audioSelect.value;
+                const audio = AppState.elements.audioMain;
                 
-                for (const element of alarmElements) {
-                    const alarmTime = element.textContent.trim();
+                audio.src = src;
+                audio.currentTime = 0;
+                audio.play()
+                    .then(() => AudioController.updateStatus('Playing'))
+                    .catch(e => console.error("Audio error:", e));
                     
-                    // Check if current time matches alarm time and hasn't been triggered recently
-                    if (alarmTime === currentTime && lastTriggeredTime !== currentTime) {
-                        lastTriggeredTime = currentTime;
-                        
-                        // Get alarm label
-                        const alarmItem = element.closest('.alarm-item');
-                        const alarmLabel = alarmItem.querySelector('.alarm-label').textContent.trim();
-                        
-                        // Trigger alarm
-                        triggerAlarm(alarmTime, alarmLabel);
-                        
-                        // Reset trigger after 1 minute
-                        setTimeout(() => {
-                            lastTriggeredTime = null;
-                        }, 60000);
-                        
-                        break; // Only trigger one alarm at a time
+                document.getElementById('currentAudio').textContent = "Memutar: " + AppState.elements.audioSelect.options[AppState.elements.audioSelect.selectedIndex].text;
+            },
+            pause: () => {
+                AppState.elements.audioMain.pause();
+                AppState.elements.audioPreview.pause();
+                AudioController.updateStatus('Paused');
+            },
+            stop: () => {
+                AppState.elements.audioMain.pause();
+                AppState.elements.audioMain.currentTime = 0;
+                AppState.elements.audioPreview.pause();
+                AppState.elements.audioPreview.currentTime = 0;
+                AudioController.updateStatus('Stopped');
+            },
+            test: () => {
+                Utils.unlockAudio();
+                const src = AppState.elements.audioSelect.value;
+                AppState.elements.audioPreview.src = src;
+                AppState.elements.audioPreview.currentTime = 0;
+                AppState.elements.audioPreview.play();
+                AudioController.updateStatus('Testing...');
+            },
+            updateStatus: (status) => {
+                document.getElementById('audioStatus').textContent = `Status: ${status}`;
+            }
+        };
+
+        /**
+         * Alarm Logic Controller
+         */
+        const AlarmController = {
+            check: (currentTime) => {
+                // Check normal alarms
+                document.querySelectorAll('.alarm-item:not(.inactive) .alarm-time').forEach(el => {
+                    const time = el.textContent.trim();
+                    if (time === currentTime && AppState.lastTriggered !== currentTime) {
+                        AppState.lastTriggered = currentTime;
+                        const label = el.closest('.alarm-item').querySelector('.alarm-label').textContent.trim();
+                        AlarmController.trigger(time, label);
+                        // Lock trigger for 60s
+                        setTimeout(() => AppState.lastTriggered = null, 60000);
+                    }
+                });
+
+                // Check snooze
+                if (AppState.snoozeTime) {
+                    const now = new Date();
+                    if (now >= AppState.snoozeTime) {
+                        const h = String(now.getHours()).padStart(2,'0');
+                        const m = String(now.getMinutes()).padStart(2,'0');
+                        AlarmController.trigger(`${h}:${m}`, 'Snooze Alarm');
+                        AppState.snoozeTime = null;
                     }
                 }
-            } catch (error) {
-                console.error('Error checking alarms:', error);
+            },
+            trigger: (time, label) => {
+                document.getElementById('ringTime').textContent = time;
+                document.getElementById('ringLabel').textContent = label;
+                new bootstrap.Modal(document.getElementById('alarmModal')).show();
+                AudioController.play();
+            },
+            stop: () => {
+                AudioController.stop();
+                bootstrap.Modal.getInstance(document.getElementById('alarmModal')).hide();
+            },
+            snooze: () => {
+                AudioController.stop();
+                bootstrap.Modal.getInstance(document.getElementById('alarmModal')).hide();
+                AppState.snoozeTime = new Date(Date.now() + 5 * 60000); // 5 minutes
+                Utils.showNotification('Alarm ditunda selama 5 menit.');
             }
-        }
-        
-        // Check snooze alarm
-        function checkSnooze() {
-            if (snoozeTime) {
+        };
+
+        /**
+         * UI & Edit Controller
+         */
+        const UIController = {
+            updateClock: () => {
                 const now = new Date();
-                if (now >= snoozeTime) {
-                    triggerAlarm(
-                        `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`, 
-                        'Snooze Alarm'
-                    );
-                    snoozeTime = null;
+                const h = String(now.getHours()).padStart(2,'0');
+                const m = String(now.getMinutes()).padStart(2,'0');
+                const s = String(now.getSeconds()).padStart(2,'0');
+                
+                document.getElementById('digitalClock').textContent = `${h}:${m}:${s}`;
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                });
+                
+                AlarmController.check(`${h}:${m}`);
+                requestAnimationFrame(UIController.updateClock);
+            },
+            openEdit: (id) => {
+                const item = document.querySelector(`.alarm-item[data-id="${id}"]`);
+                if (!item) return;
+
+                // Fill form data
+                document.getElementById('editId').value = id;
+                document.getElementById('editTime').value = item.querySelector('.alarm-time').textContent.trim();
+                document.getElementById('editLabel').value = item.querySelector('.alarm-label').textContent.trim();
+                
+                // Handle Checkboxes
+                const isActive = !item.classList.contains('inactive');
+                const isLogo = item.getAttribute('data-logo') === 'true';
+                document.getElementById('editActive').checked = isActive;
+                document.getElementById('editIsLogo').checked = isLogo;
+
+                // Handle Image Preview
+                const imgUrl = item.getAttribute('data-image');
+                const previewContainer = document.getElementById('editPreviewContainer');
+                if (imgUrl && imgUrl !== 'null' && imgUrl !== '') {
+                    previewContainer.style.display = 'block';
+                    document.getElementById('editImagePreview').src = imgUrl;
+                } else {
+                    previewContainer.style.display = 'none';
                 }
+
+                new bootstrap.Modal(document.getElementById('editModal')).show();
             }
-        }
-        
-        // Trigger alarm
-        function triggerAlarm(time, label) {
-            // Show alarm modal
-            document.getElementById('alarmTimeDisplay').textContent = time;
-            document.getElementById('alarmLabelDisplay').textContent = label;
+        };
+
+        /**
+         * Initialization
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start Clock
+            UIController.updateClock();
             
-            const alarmModal = new bootstrap.Modal(document.getElementById('alarmModal'));
-            alarmModal.show();
+            // Init Audio Events
+            AudioController.init();
             
-            // Play alarm sound
-            playAlarmSound();
-        }
-        
-        // Play selected audio
-        function playSelectedAudio() {
-            currentAlarmSound = audioSelect.value;
-            
-            // Update alarm audio source
-            alarmAudio.src = currentAlarmSound;
-            
-            // Show current audio name
-            const audioName = audioSelect.options[audioSelect.selectedIndex].text;
-            currentAudio.textContent = `Memutar: ${audioName}`;
-            
-            // Play
-            playAlarmSound();
-        }
-        
-        // Play alarm sound
-        function playAlarmSound() {
-            if (!userInteracted) {
-                showNotification('Klik di halaman terlebih dahulu untuk mengaktifkan audio');
-                return;
-            }
-            
-            if (!alarmAudio.src) {
-                alarmAudio.src = currentAlarmSound;
-            }
-            
-            try {
-                alarmAudio.currentTime = 0;
-                alarmAudio.play().then(() => {
-                    audioStatus.textContent = 'Status: Playing';
-                }).catch(error => {
-                    console.log('Failed to play sound:', error);
-                    showNotification('Gagal memutar suara. Pastikan browser mendukung audio.');
-                });
-            } catch (error) {
-                console.log('Error playing sound:', error);
-            }
-        }
-        
-        // Test alarm sound
-        function testAlarmSound() {
-            if (!userInteracted) {
-                showNotification('Klik di halaman terlebih dahulu untuk mengaktifkan audio');
-                return;
-            }
-            
-            currentAlarmSound = audioSelect.value;
-            
-            // Update and play preview
-            previewAudio.src = currentAlarmSound;
-            previewAudio.currentTime = 0;
-            
-            const audioName = audioSelect.options[audioSelect.selectedIndex].text;
-            currentAudio.textContent = `Testing: ${audioName}`;
-            audioStatus.textContent = 'Status: Testing';
-            
-            previewAudio.play().catch(e => {
-                console.log('Test play failed:', e);
-                showNotification('Gagal memutar test suara');
-            });
-        }
-        
-        // Pause audio
-        function pauseAudio() {
-            if (!alarmAudio.paused) {
-                alarmAudio.pause();
-                audioStatus.textContent = 'Status: Paused';
-            }
-            if (!previewAudio.paused) {
-                previewAudio.pause();
-            }
-        }
-        
-        // Stop audio
-        function stopAudio() {
-            alarmAudio.pause();
-            alarmAudio.currentTime = 0;
-            
-            previewAudio.pause();
-            previewAudio.currentTime = 0;
-            
-            audioStatus.textContent = 'Status: Stopped';
-            audioProgress.style.width = '0%';
-            currentTimeDisplay.textContent = '0:00';
-            currentAudio.textContent = 'Tidak ada audio yang diputar';
-        }
-        
-        // Stop alarm (from modal)
-        function stopAlarm() {
-            stopAudio();
-            
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('alarmModal'));
-            if (modal) {
-                modal.hide();
-            }
-            
-            showNotification('Alarm dimatikan');
-        }
-        
-        // Snooze alarm
-        function snoozeAlarm() {
-            stopAudio();
-            
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('alarmModal'));
-            if (modal) {
-                modal.hide();
-            }
-            
-            // Set snooze for 5 minutes
-            const now = new Date();
-            snoozeTime = new Date(now.getTime() + 5 * 60000);
-            
-            const snoozeHours = String(snoozeTime.getHours()).padStart(2, '0');
-            const snoozeMinutes = String(snoozeTime.getMinutes()).padStart(2, '0');
-            
-            showNotification(`Alarm ditunda sampai ${snoozeHours}:${snoozeMinutes}`);
-        }
-        
-        // Update volume
-        function updateVolume() {
-            const volume = volumeSlider.value / 100;
-            volumeValue.textContent = volumeSlider.value;
-            
-            alarmAudio.volume = volume;
-            previewAudio.volume = volume;
-        }
-        
-        // Format time (seconds to MM:SS)
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-        
-        // Update audio progress
-        function updateAudioProgress(audioElement, progressElement, timeElement) {
-            if (audioElement.duration) {
-                const progress = (audioElement.currentTime / audioElement.duration) * 100;
-                progressElement.style.width = progress + '%';
-                timeElement.textContent = formatTime(audioElement.currentTime);
-            }
-        }
-        
-        // Show notification
-        function showNotification(message) {
-            // Remove existing notifications
-            document.querySelectorAll('.notification').forEach(el => el.remove());
-            
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = 'alert alert-warning alert-dismissible fade show notification';
-            notification.innerHTML = `
-                <i class="bi bi-info-circle me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 5000);
-        }
-        
-        // Enable audio interaction
-        function enableAudio() {
-            if (!userInteracted) {
-                userInteracted = true;
-                
-                // Try to play a silent audio to unlock audio context
-                const silentAudio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==');
-                silentAudio.volume = 0.001;
-                
-                silentAudio.play().then(() => {
-                    console.log('Audio enabled');
-                    silentAudio.pause();
-                    showNotification('Audio telah diaktifkan');
-                }).catch(() => {
-                    console.log('Audio already enabled');
-                });
-            }
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Start clock
-            updateClock();
-            
-            // Enable user interaction for audio
-            document.addEventListener('click', enableAudio);
-            document.addEventListener('keydown', enableAudio);
-            document.addEventListener('touchstart', enableAudio);
-            
-            // Setup audio events
-            [alarmAudio, previewAudio].forEach(audio => {
-                audio.addEventListener('timeupdate', function() {
-                    updateAudioProgress(this, audioProgress, currentTimeDisplay);
-                });
-                
-                audio.addEventListener('loadedmetadata', function() {
-                    if (this.duration) {
-                        durationDisplay.textContent = formatTime(this.duration);
-                    }
-                });
-                
-                audio.addEventListener('play', function() {
-                    audioStatus.textContent = 'Status: Playing';
-                });
-                
-                audio.addEventListener('pause', function() {
-                    audioStatus.textContent = 'Status: Paused';
-                });
-                
-                audio.addEventListener('ended', function() {
-                    audioStatus.textContent = 'Status: Stopped';
-                    audioProgress.style.width = '0%';
-                    currentTimeDisplay.textContent = '0:00';
-                });
-            });
-            
-            // Volume slider event
-            volumeSlider.addEventListener('input', updateVolume);
-            
-            // Auto-focus on time input
-            setTimeout(() => {
-                const timeInput = document.getElementById('alarmTime');
-                if (timeInput) {
-                    timeInput.focus();
-                }
-            }, 500);
-            
-            // Set current time as default in form
-            const now = new Date();
-            const currentTimeInput = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-            const timeInput = document.getElementById('alarmTime');
-            if (timeInput && !timeInput.value) {
-                timeInput.value = currentTimeInput;
-            }
-            
-            // Auto-dismiss alerts after 5 seconds
-            setTimeout(() => {
-                const alerts = document.querySelectorAll('.alert:not(.notification)');
-                alerts.forEach(alert => {
-                    try {
-                        const bsAlert = new bootstrap.Alert(alert);
-                        setTimeout(() => {
-                            try {
-                                bsAlert.close();
-                            } catch (e) {
-                                alert.remove();
-                            }
-                        }, 5000);
-                    } catch (e) {
-                        // Ignore
-                    }
-                });
-            }, 1000);
-            
-            // Initialize Bootstrap tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-            
-            // Welcome message
-            console.log('Web Alarm Clock initialized');
+            // Global unlock listeners
+            ['click', 'keydown', 'touchstart'].forEach(evt => 
+                document.addEventListener(evt, Utils.unlockAudio, {once: true})
+            );
+
+            console.log('Alarm Clock Initialized');
         });
-        
-        // Prevent form resubmission on page refresh
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-        
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', function() {
-            if (alarmAudio) {
-                alarmAudio.pause();
-                alarmAudio.currentTime = 0;
-            }
-            if (previewAudio) {
-                previewAudio.pause();
-                previewAudio.currentTime = 0;
-            }
-        });
+
     </script>
 </body>
 </html>
