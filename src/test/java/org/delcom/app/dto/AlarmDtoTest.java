@@ -1,5 +1,5 @@
 package org.delcom.app.dto;
 
-public class AlarmDto {
+public class AlarmDtoTest {
   
 }

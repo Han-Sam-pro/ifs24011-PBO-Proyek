@@ -2,7 +2,6 @@ package org.delcom.app.controllers;
 
 import org.delcom.app.dto.AlarmDto;
 import org.delcom.app.services.AlarmService;
-import org.delcom.app.services.AudioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,14 +19,11 @@ public class AlarmController {
     @Autowired
     private AlarmService alarmService;
     
-    @Autowired
-    private AudioService audioService;
     
     @GetMapping
     public String index(Model model) {
         model.addAttribute("alarmDto", new AlarmDto());
         model.addAttribute("alarms", alarmService.getAllAlarms());
-        model.addAttribute("audioFiles", audioService.getAvailableSounds());
         model.addAttribute("currentTime", LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
         return "index";
     }
@@ -39,7 +35,6 @@ public class AlarmController {
                            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("alarms", alarmService.getAllAlarms());
-            model.addAttribute("audioFiles", audioService.getAvailableSounds());
             return "index";
         }
         
@@ -57,7 +52,6 @@ public class AlarmController {
         
         if (result.hasErrors()) {
             model.addAttribute("alarms", alarmService.getAllAlarms());
-            model.addAttribute("audioFiles", audioService.getAvailableSounds());
             model.addAttribute("currentTime", LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
             return "index";
         }
