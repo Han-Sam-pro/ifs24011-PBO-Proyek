@@ -1,3 +1,5 @@
+register: 
+
 <!DOCTYPE html>
 <html
   xmlns:th="http://www.thymeleaf.org"
@@ -6,51 +8,121 @@
 >
   <head>
     <title>Daftar - Spring Boot Todolist</title>
+    <!-- Font Google 'Poppins' (Sama seperti halaman login) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div layout:fragment="content" class="mt-5">
+    <div layout:fragment="content">
+
+      <!-- STYLE CSS (Sama persis dengan halaman Login agar konsisten) -->
+      <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+            min-height: 100vh;
+        }
+        .login-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+            margin-top: 5rem;
+            margin-bottom: 5rem; /* Tambahan margin bawah agar tidak mepet saat di mobile */
+        }
+        .login-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+        .form-control {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: #fff;
+            border-color: #9599E2;
+            box-shadow: 0 0 0 4px rgba(149, 153, 226, 0.1);
+        }
+        .form-label-custom {
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+            transition: transform 0.2s;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(149, 153, 226, 0.4);
+            color: white;
+        }
+        .link-custom {
+            color: #9599E2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .link-custom:hover {
+            text-decoration: underline;
+            color: #7a7dbf;
+        }
+      </style>
+
       <form
         th:action="@{/auth/register/post}"
         method="post"
         th:object="${registerForm}"
       >
-        <div class="card mx-auto" style="max-width: 360px">
-          <div class="card-body">
+        <!-- Menggunakan style .login-card -->
+        <div class="card mx-auto login-card" style="max-width: 400px">
+          <div class="card-body p-4 p-md-5">
             <div>
-              <div class="text-center">
+              <div class="text-center mb-4">
                 <img
                   th:src="@{/assets/images/logo.png}"
                   alt="Logo"
-                  width="64"
+                  width="70"
+                  class="mb-3"
                 />
-                <hr />
-                <h5>Daftar</h5>
-                <span class="text-muted">
-                  Lengkapi form pendaftaran berikut untuk membuat akun baru
-                </span>
-                <hr />
+                <h4 class="login-title">Buat Akun Baru</h4>
+                <p class="text-muted small">
+                  Lengkapi form pendaftaran berikut untuk membuat akun
+                </p>
               </div>
 
               <!-- Pesan Error Global -->
               <div
                 th:if="${#fields.hasGlobalErrors()}"
-                class="alert alert-danger"
+                class="alert alert-danger shadow-sm border-0 rounded-3"
               >
+                <i class="bi bi-exclamation-circle me-2"></i>
                 <th:block
                   th:each="err : ${#fields.globalErrors()}"
                   th:text="${err}"
                 ></th:block>
               </div>
 
-              <!-- Nama -->
+              <!-- Nama Lengkap -->
               <div class="form-group mb-3">
-                <label for="inputName">Nama Lengkap</label>
+                <label for="inputName" class="form-label-custom">Nama Lengkap</label>
                 <input
                   type="text"
                   class="form-control"
                   id="inputName"
                   th:field="*{name}"
                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                  placeholder="Contoh: Budi Santoso"
                 />
                 <div
                   th:if="${#fields.hasErrors('name')}"
@@ -65,13 +137,14 @@
 
               <!-- Alamat Email -->
               <div class="form-group mb-3">
-                <label for="inputEmail">Email</label>
+                <label for="inputEmail" class="form-label-custom">Email Address</label>
                 <input
                   type="email"
                   class="form-control"
                   id="inputEmail"
                   th:field="*{email}"
                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                  placeholder="nama@email.com"
                 />
                 <div
                   th:if="${#fields.hasErrors('email')}"
@@ -85,14 +158,15 @@
               </div>
 
               <!-- Kata Sandi -->
-              <div class="form-group mb-3">
-                <label for="inputPassword">Kata Sandi</label>
+              <div class="form-group mb-4">
+                <label for="inputPassword" class="form-label-custom">Password</label>
                 <input
                   type="password"
                   class="form-control"
                   id="inputPassword"
                   th:field="*{password}"
                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                  placeholder="••••••••"
                 />
                 <div
                   th:if="${#fields.hasErrors('password')}"
@@ -105,18 +179,20 @@
                 </div>
               </div>
 
-              <!-- Tombol Masuk -->
-              <div class="form-group mt-3 text-end">
-                <button type="submit" class="btn btn-primary btn-block">
-                  Masuk
+              <!-- Tombol Daftar (Diperbarui tampilannya) -->
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-gradient btn-block">
+                  Daftar Sekarang
                 </button>
               </div>
 
-              <hr />
-              <p class="text-center">
-                Sudah memiliki akun?
-                <a th:href="@{/auth/login}">Masuk</a>
-              </p>
+              <div class="text-center mt-4">
+                <p class="small text-muted mb-0">
+                  Sudah memiliki akun?
+                  <a th:href="@{/auth/login}" class="link-custom">Masuk disini</a>
+                </p>
+              </div>
+
             </div>
           </div>
         </div>
