@@ -14,8 +14,8 @@
 	<groupId>org.delcom</groupId>
 	<artifactId>spring-todos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Spring Todos</name>
-	<description>Todo Application with Spring Boot</description>
+	<name>Aplikasi alaram sederhana</name>
+	<description>Aplikasi alaram sederhana</description>
 
 	<properties>
 		<java.version>25</java.version>
